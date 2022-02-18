@@ -18,10 +18,12 @@ while True:
             x1, x2 = int(lm.x * w), int(lm.y * h)
             for id, lm in enumerate(handLms.landmark):
                 h, w, c = img.shape
-                cx, cy = int(lm.x * w), int(lm.y * h)
-                cv2.circle(img, (cx, cy), 10, (255, 0, 0), 2)
-                cv2.putText(img, str(id), (cx, cy), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
-
+                p1 = (int(handLms.landmark[0].x * w), int(handLms.landmark[0].y * h))
+                p2 = (int(handLms.landmark[5].x * w), int(handLms.landmark[5].y * h))
+                p3 = (int(handLms.landmark[17].x * w), int(handLms.landmark[17].y * h))
+                cv2.circle(img, p1, 10, (255, 0, 0), 2)
+                cv2.circle(img, p2, 10, (255, 0, 0), 2)
+                cv2.circle(img, p3, 10, (255, 0, 0), 2)
 
     cv2.imshow("Image", img)
     k = cv2.waitKey(1) & 0xFF
