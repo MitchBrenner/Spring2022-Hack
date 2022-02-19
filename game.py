@@ -1,11 +1,14 @@
 import cv2
 import mediapipe as mp
+import numpy as np
 import time
 import random
 import math
 
 SPAWN_INTERVAL = 2 # seconds
 HAND_RADIUS = 30
+GOAL_RADIUS = 50
+GOAL_INSET = 10
 
 objects = []
 objFreeze = []
@@ -18,6 +21,7 @@ mpHands = mp.solutions.hands
 hands = mpHands.Hands()
 
 pTime = time.time()
+goals = 0
 
 while True:
     # get image
@@ -27,6 +31,14 @@ while True:
     
     # image shape
     h, w, c = img.shape
+
+    bkgrd = np.zeros(img.shape)
+
+    # goals
+    g1 = (GOAL_INSET,int(h/2))
+    cv2.circle(bkgrd, g1, GOAL_RADIUS, (255, 0, 0), cv2.FILLED, 2)
+    g2 = (w - GOAL_INSET,int(h/2))
+    cv2.circle(bkgrd, g2, GOAL_RADIUS, (255, 0, 0), cv2.FILLED, 2)
 
     # get hand locations
     handLocs = []
@@ -40,7 +52,7 @@ while True:
                 
                 cent = (int((p1[0] + p2[0] + p3[0])/3), int((p1[1] + p2[1] + p3[1])/3))
                 handLocs.append(cent)
-                cv2.circle(img, cent, HAND_RADIUS, (0, 255, 0), cv2.FILLED, 2)
+                cv2.circle(bkgrd, cent, HAND_RADIUS, (0, 255, 0), cv2.FILLED, 2)
 
     # handle individual object actions
     for obj in objects:
@@ -50,7 +62,13 @@ while True:
             objects.remove(obj)
             continue
     
-        cv2.circle(img, obj[0], 5, (0,0,255), cv2.FILLED, 2)
+        if(math.hypot(g1[0] - obj[0][0], g1[1] - obj[0][1]) < GOAL_RADIUS
+           or math.hypot(g2[0] - obj[0][0], g2[1] - obj[0][1]) < GOAL_RADIUS):
+            objects.remove(obj)
+            goals += 1
+            continue
+
+        cv2.circle(bkgrd, obj[0], 5, (0,0,255), cv2.FILLED, 2)
 
         if len(handLocs) == 2:
             if(math.hypot(handLocs[0][0] - obj[0][0], handLocs[0][1] - obj[0][1]) < HAND_RADIUS and not obj[2]):
@@ -90,7 +108,10 @@ while True:
         # sturcture of object is [position pair, velocity pair]
         objects.append([(xPos, yPos), (xVel, yVel), 0])
 
-    cv2.imshow("Image", img)
+
+    cv2.putText(bkgrd, str(goals), (10,70), cv2.FONT_HERSHEY_COMPLEX, 2, (255,0,0), 2)
+
+    cv2.imshow("Image", bkgrd)
     k = cv2.waitKey(1) & 0xFF
     if k == 27:    # Use Esc key to exit the program
         break
