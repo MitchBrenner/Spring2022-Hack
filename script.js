@@ -15,11 +15,11 @@ let y2 = null;
 let running = false;
 
 // container for all active particles
-let objects = []
+let objects = [];
 
 // particle speed
-let speed = 5 // pixels per second
-let spawnInterval = 2  // seconds
+let speed = 5; // pixels per second
+let spawnInterval = 2;  // seconds
 
 // timing parameters (in milliseconds)
 let pTimeSpawn = Date.now();
@@ -94,15 +94,17 @@ function processVideo() {
 
         obj[0] = [parseInt(obj[0][0] + obj[1][0]*speed), parseInt(obj[0][1] + obj[1][1]*speed)];
 
+        // remove object for out of window
         if(obj[0][0] > w || obj[0][0] < 0 || obj[0][1] > h || obj[0][1] < 0){
-            objects.splice(i);
+            objects.splice(i,1);
             i--;
             continue;
         }
     
+        // remove object and increment score when goal scored
         if(Math.hypot(g1x - obj[0][0], g1y - obj[0][1]) < GOAL_RADIUS
            || Math.hypot(g2x - obj[0][0], g2y - obj[0][1]) < GOAL_RADIUS){
-            objects.splice(i);
+            objects.splice(i,1);
             i--;
             goals += 1;
             continue;
@@ -174,6 +176,7 @@ function processVideo() {
     cv.putText(img, timeRemaining.toString(), new cv.Point(w - 70,50), cv.FONT_HERSHEY_COMPLEX, 1, green, 2)
 
     cv.imshow('canvasOutput', img);
+    img.delete();
 
     if(timeRemaining > 0) {
         setTimeout(processVideo, 1);
@@ -184,6 +187,7 @@ function processVideo() {
 
 function playclicked() {
     if(!running) {
+        initialize();
         setTimeout(processVideo, 0);
     } else {
         initialize();
