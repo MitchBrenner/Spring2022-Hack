@@ -71,6 +71,8 @@
         }
         .parclicked {
             color: #008200;
+            max-width: 80%;
+            margin: 20px;
         }
 
         .vidcontainer * {
@@ -106,7 +108,6 @@
         if a basketball is "in" one of them it will be immediately transported to the other. The speed and direction of the 
         basketball will be kept the same after transporting, and your goal is to get the basketballs into one of the two hoops. 
         Good luck!</div>
-
     <script>
         function playclicked() {
             // play game/initialize here
@@ -114,8 +115,6 @@
         function directionsclicked() {
             console.log("The directions button has been clicked");
             var elem = document.getElementById("playbutton");
-            elem.parentNode.removeChild(elem);
-            elem = document.getElementById("space");
             elem.parentNode.removeChild(elem);
             elem = document.getElementById("directionsbutton");
             elem.parentNode.removeChild(elem);
