@@ -1,8 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RONK AND MARTY</title>
+    <script src="./opencv.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script defer src="./script.js"></script>
     <style>
         body {
+            font-family: 'Press Start 2P', cursive;
             background-color: #121212;
             margin: 0;
             padding: 0;
@@ -10,28 +24,26 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'ArcadeClassic', sans-serif;
-
         }
         h1 {
             padding: 0;
-            margin: 0;
+            margin-top: 20;
             color: #008200;
-            font-size: 48px;
+            font-size: 22px;
             letter-spacing: 4px;
         }
         h2 {
             padding: 0;
             margin-bottom: 100px;
             color: #0047AB;
-            font-size: 30px;
+            font-size: 15px;
         }
         .button {
             border: none;
             border-radius: 8px;
             text-align: center;
             text-decoration: none;
-            font-size: 40px;
+            font-size: 20px;
             cursor: pointer;
             width: 250px;
             height: 55px;
@@ -73,6 +85,7 @@
             color: #008200;
             max-width: 80%;
             margin: 20px;
+            font-size: 10px;
         }
 
         .vidcontainer * {
@@ -82,17 +95,6 @@
         }
     </style>
     
-    <link href="http://fonts.cdnfonts.com/css/arcade-classic" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RONK AND MARTY</title>
-    <script src="./opencv.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <script defer src="./script.js"></script>
 </head>
 <body>
     <h1>Ronk and Marty Play Portal Basketball</h1>
