@@ -12,6 +12,8 @@ let y1 = null;
 let x2 = null;
 let y2 = null;
 
+let running = false;
+
 // container for all active particles
 let objects = []
 
@@ -29,7 +31,30 @@ let cTime = Date.now();
 let goals = 0
 let timeRemaining = 60 // seconds
 
+function initialize() {
+    running = false;
+
+    // container for all active particles
+    objects = []
+
+    // particle speed
+    speed = 5 // pixels per second
+    spawnInterval = 2  // seconds
+
+    // timing parameters (in milliseconds)
+    pTimeSpawn = Date.now();
+    pTimeDiff = Date.now();
+    pTimeCount = Date.now();
+    cTime = Date.now();
+
+    // bookkeeping
+    goals = 0
+    timeRemaining = 60 // seconds
+}
+
 function processVideo() {
+    running = true;
+
     const red = new cv.Scalar(255, 0, 0, 255);
     const green = new cv.Scalar(0, 255, 0, 255);
     const blue = new cv.Scalar(0, 0, 255, 255);
@@ -150,12 +175,20 @@ function processVideo() {
 
     cv.imshow('canvasOutput', img);
 
-    if(timeRemaining > 0)
+    if(timeRemaining > 0) {
         setTimeout(processVideo, 1);
+    } else {
+        running = false;
+    }
 }
 
-// make this called by play button
-setTimeout(processVideo, 0);
+function playclicked() {
+    if(!running) {
+        setTimeout(processVideo, 0);
+    } else {
+        initialize();
+    }
+}
 
 /////////////////////////////////////////////////////////////////////////
 
