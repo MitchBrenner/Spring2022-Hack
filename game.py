@@ -11,7 +11,6 @@ GOAL_INSET = 10
 DIFF_INC = 5
 
 objects = []
-objFreeze = []
 
 speed = 5
 
