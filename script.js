@@ -1,3 +1,5 @@
+'use strict';
+
 let video = document.getElementById("video");
 
 navigator.mediaDevices.getUserMedia({ video: true, audio: false })
@@ -5,22 +7,10 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
         video.srcObject = stream;
     });
 
-let img = new cv.Mat(video.height, video.width, cv.CV_8UC4);
-let cap = new cv.VideoCapture(video);
-
 let x1 = null;
 let y1 = null;
 let x2 = null;
 let y2 = null;
-
-// video parameters
-let h = video.height;
-let w = video.width;
-
-const HAND_RADIUS = 30 // pixels
-const GOAL_RADIUS = 50 // pixels
-const GOAL_INSET = 10  // pixels
-const DIFF_INC = 5     // seconds
 
 // container for all active particles
 let objects = []
@@ -39,11 +29,20 @@ let cTime = Date.now();
 let goals = 0
 let timeRemaining = 60 // seconds
 
-const red = new cv.Scalar(255, 0, 0, 255);
-const green = new cv.Scalar(0, 255, 0, 255);
-const blue = new cv.Scalar(0, 0, 255, 255);
-
 function processVideo() {
+    const red = new cv.Scalar(255, 0, 0, 255);
+    const green = new cv.Scalar(0, 255, 0, 255);
+    const blue = new cv.Scalar(0, 0, 255, 255);
+
+    // video parameters
+    let h = video.height;
+    let w = video.width;
+
+    const HAND_RADIUS = 30 // pixels
+    const GOAL_RADIUS = 50 // pixels
+    const GOAL_INSET = 10  // pixels
+    const DIFF_INC = 5     // seconds
+
     // setup background
     let img = new cv.Mat(h, w, cv.CV_8UC4, [0, 0, 0, 255]);
 
@@ -87,17 +86,17 @@ function processVideo() {
         cv.circle(img, new cv.Point(obj[0][0], obj[0][1]), 5, red, cv.FILLED, 2);
 
         if(x1 && x2 && y1 && y2) {
-            if(Math.hypot(x1 - obj[0][0], y1 - obj[0][1]) < HAND_RADIUS && obj[2] === 1) {
+            if(Math.hypot(x1*w - obj[0][0], y1*h - obj[0][1]) < HAND_RADIUS && obj[2] === 1) {
                 console.log("collision");
-                obj[0] = [obj[0][0] - x1 + x2, obj[0][1] - y1 + y2];
+                obj[0] = [parseInt(obj[0][0] - x1*w + x2*w), parseInt(obj[0][1] - h*y1 + h*y2)];
                 obj[2] = 0;
-            } else if(Math.hypot(x2 - obj[0][0], y2 - obj[0][1]) < HAND_RADIUS && obj[2] === 1) {
+            } else if(Math.hypot(x2*w - obj[0][0], y2*h - obj[0][1]) < HAND_RADIUS && obj[2] === 1) {
                 console.log("collision");
-                obj[0] = [obj[0][0] - x2 + x1, obj[0][1] - y2 + y1];
+                obj[0] = [parseInt(obj[0][0] - w*x2 + w*x1), parseInt(obj[0][1] - h*y2 + h*y1)];
                 obj[2] = 0;
             } else if(!(obj[2] === 1)
-                && Math.hypot(x1 - obj[0][0], y1 - obj[0][1]) > 2*HAND_RADIUS 
-                && Math.hypot(x2 - obj[0][0], y2 - obj[0][1]) > 2*HAND_RADIUS) {
+                && Math.hypot(x1*w - obj[0][0], y1*h - obj[0][1]) > 2*HAND_RADIUS 
+                && Math.hypot(x2*w - obj[0][0], y2*h - obj[0][1]) > 2*HAND_RADIUS) {
                 obj[2] = 1;
             }
         }
@@ -118,11 +117,13 @@ function processVideo() {
         else
             xVel = -xVel;
 
+        let xPos = 0;
         if(xVel < 0)
             xPos = w;
         else
             xPos = 0;
 
+        let yPos = 0;
         if(yVel < 0)
             yPos = h;
         else
@@ -163,10 +164,6 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 function onResults(results) {
-    canvasCtx.save();
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    canvasCtx.drawImage(
-        results.image, 0, 0, canvasElement.width, canvasElement.height);
     if (results.multiHandLandmarks) {
         if(results.multiHandLandmarks.length == 2) {
             x1 = (results.multiHandLandmarks[0][0].x 
@@ -189,8 +186,6 @@ function onResults(results) {
             y2 = null;
         }
     }
-
-    canvasCtx.restore();
 }
 
 const hands = new Hands({locateFile: (file) => {
