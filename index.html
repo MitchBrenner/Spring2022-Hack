@@ -1,13 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>    
+    <style>
+        body {
+            background-color: #121212;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Georgia;
+        }
+        h1 {
+            padding: 0;
+            margin: 0;
+            color: #008200;
+            font-size: 48px;
+        }
+        h2 {
+            padding: 0;
+            margin: 0;
+            color: #0047AB;
+            font-size: 30px;
+        }
+        .spacebutton {
+            font-size: 30px;
+            padding-top: 3%;
+            color: transparent;
+            background-color: transparent;
+        }
+        .button {
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 40px;
+            cursor: pointer;
+            width: 250px;
+            height: 55px;
+        }
+        .playbutton {
+            color: #121212; 
+            background-color: #008200;
+        }
+        .playbutton:hover {
+            background-color: #17B169;
+        }
+        .directionsbutton {
+            color: #121212;
+            background-color: #0047AB;
+        }
+        .directionsbutton:hover {
+            background-color: #7CB9E8;
+        }
+        .homescreenbutton {
+            size: 0px 0px;
+            color: transparent;
+            background-color: transparent;
+        }
+        .homescreenbuttonvisible {
+            background-color: #0047AB;
+            color: #121212;
+        }
+        .homescreenbuttonvisible:hover {
+            background-color: #7CB9E8;
+        }
+        .par {
+            color: transparent;
+            text-align: center;
+        }
+        .parclicked {
+            color: #008200;
+        }
+    </style>
+    
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./opencv.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script defer src="./script.js"></script>
 </head>
 <body>
-    <h1>Ronk and Marty</h1>
-    <h2>Portal Basketball</h2>
+    <h1>Ronk and Marty Play Portal Basketball</h1>
+    <h2>(But not portal basketball and not Ronk and Marty)</h2>
+    
+    <div class="spacebutton" id="space">This text won't show up</div>
+    <div class="button playbutton" id="playbutton" onclick="playclicked();">Play!</div>
+    &nbsp;&nbsp;
+    <div class="button directionsbutton" id="directionsbutton" onclick="directionsclicked();">Directions</div>
+    <div class="homescreenbutton" id="homescreenbutton" onclick="homescreenclicked();">Home Screen</div>
+    &nbsp;&nbsp;
+    <div class="par" id="dirclicked">To play the game, use your hands as "portals" to suck in basketballs flying across the screen 
+        and transport them so that they will go in the hoop! Your camera must be turned on for the game to recognize your hands, and
+        if a basketball is "in" one of them it will be immediately transported to the other. The speed and direction of the 
+        basketball will be kept the same after transporting, and your goal is to get the basketballs into one of the two hoops. 
+        Good luck!</div>
+
+    <script>
+        function playclicked() {
+            // play game/initialize here
+        }
+        function directionsclicked() {
+            console.log("The directions button has been clicked");
+            var elem = document.getElementById("playbutton");
+            elem.parentNode.removeChild(elem);
+            elem = document.getElementById("space");
+            elem.parentNode.removeChild(elem);
+            elem = document.getElementById("directionsbutton");
+            elem.parentNode.removeChild(elem);
+            elem = document.getElementById("homescreenbutton");
+            elem.setAttribute("class", "button homescreenbuttonvisible");
+            elem = document.getElementById("dirclicked");
+            elem.setAttribute("class", "parclicked");
+        }
+        function homescreenclicked() {
+            window.location.reload();
+        }
+    </script>
+
+    <video id="video" width="720" height="560" autoplay muted></video>
+    <canvas id="canvasOutput" width="720" height="560"></canvas>
+
+    <video class="input_video"></video>
+    <canvas class="output_canvas" width="720px" height="560px"></canvas>
 </body>
 </html>
